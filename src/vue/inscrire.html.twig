@@ -3,35 +3,66 @@
 {% block title %}Inscription{{ parent() }}{% endblock %}
 
 {% block contenu %}
-  <h1 class="text-primary text-center">Inscription :</h1>
+
+{% if form.valide is defined %}
+	{% if form.valide == true %}
+		<h1>Inscription réussi</h1>
+		<h2>Bienvenue {{ form.name }} !</h2>
+		<p>Vos identifiants sont : {{ form.email }}
+
+		{% if form.role == 1 %}
+			<p>Vous êtes administrateur du site</p>
+		{% else %}
+			<p>Vous êtes client du site</p>
+		{% endif %}
+
+	{% else %}
+		<h1>Echec d'Inscription</h1>
+		<p>{{ form.message }}</p>
+		<a href="index.php?page=inscrire">Retour à la page d'inscription</a>
+		
+	{% endif %}
+{% else %}
+  <h1 class="text-primary text-center">Inscription</h1>
 
   <div class="container-sm">
 	<div class="row col-12 justify-content-center">
-	<form class="needs-validation col-5">
+
+	<form class="needs-validation col-5" action="index.php?page=inscrire" method="post" enctype="application/x-www-form-urlencoded">
 		<div class="form-group">
-		  <label for="exampleInputPassword1">Name</label>
-		  <input type="text" class="form-control" id="exampleInputPassword1">
+		  <label for="name">Name</label>
+		  <input type="text" class="form-control" id="name" name="name">
 		</div>
 		<div class="form-group">
-		  <label for="exampleInputEmail1">Email address</label>
-		  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+		  <label for="email">Email address</label>
+		  <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
 		  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 		</div>
 		<div class="form-group">
-		  <label for="exampleInputPassword1">Password</label>
-		  <input type="password" class="form-control" id="exampleInputPassword1">
+		  <label for="mdp">Password</label>
+		  <input type="password" class="form-control" id="mdp" name="mdp">
 		</div>
 		<div class="form-group">
-		  <label for="exampleInputPassword1">Vérifier mot de passe</label>
-		  <input type="password" class="form-control" id="exampleInputPassword1">
+		  <label for="mdp2">Vérifier mot de passe</label>
+		  <input type="password" class="form-control" id="mdp2" name="mdp2">
 		</div>
 		<div class="form-group form-check">
-		  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-		  <label class="form-check-label" for="exampleCheck1">Check me out</label>
+		  <input type="checkbox" class="form-check-input" id="condition" name="condition">
+		  <label class="form-check-label" for="condition">Conditions d'utilsations</label>
 		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<div class="form-group">
+			<label for="role">Selcetionner le role</label>
+			<select class="form-control" id="role" name="role">
+				<option value="1">Administrateur</option>
+				<option value="2">Client</option>
+			</select>
+		</div>
+
+		<button type="submit" class="btn btn-primary" name="btInscrire">Submit</button>
 	  </form>
+
 	  </div>
   </div>
+{% endif %}
 
 {% endblock %}
