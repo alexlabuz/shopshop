@@ -9,6 +9,7 @@ function getPage($db){
     $lesPages['produit'] = "produitControleur";
     $lesPages['liste'] = "listeControleur";
     $lesPages['maintenance'] = "maintenanceControleur";
+    $lesPages['deconnexion'] = "deconnexionControleur";
 
     if($db != null){
         if(isset($_GET["page"])){

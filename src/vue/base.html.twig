@@ -24,15 +24,42 @@
           <li class="nav-item">
             <a class="nav-link" href="index.php?page=liste">Nos articles</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index.php?page=connection">Se connecter</a>
-          </li>
+          {% if session.login is defined %}
+            <li class="nav-item">
+              <a class="nav-link" href="index.php?page=deconnexion">Se déconnecter</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="index.php?page=connection">Se connecter</a>
+            </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="index.php?page=inscrire">S'inscrire</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="index.php?page=contact">Contact</a>
           </li>
+          </li>
+          {% if session.login is defined %}
+
+            {% if session.role == 1 %}
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administration</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Produit</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Type</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Utilisateur</a></div>
+            </li>
+
+            {% endif %}
+          
+            <li class="nav-item">
+              <a class="nav-link text-light">Bonjour {{session.prenom}}</a>
+            </li>
+          {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

@@ -11,7 +11,7 @@ class Utilsateur{
         $this->insert = $this->db->prepare("INSERT INTO utilisateur(email, mdp, nom, prenom, idRole)
         VALUES(:email, :mdp, :nom, :prenom, :roleUtilisateur)"); // 2
 
-        $this->connect = $this->db->prepare("SELECT * FROM utiliateur WHERE email=:email");
+        $this->connect = $this->db->prepare("SELECT * FROM utilisateur WHERE email=:email");
     }
 
     // Fonction qui ajoute un utilsateur dans la base de données
@@ -31,7 +31,7 @@ class Utilsateur{
         $this->connect->execute(array(':email'=>$email));
 
         if($this->connect->errorCode() != 0){
-            //print_r($this->connect->errorInfo());
+            print_r($this->connect->errorInfo());
         }
         return $this->connect->fetch();
     }

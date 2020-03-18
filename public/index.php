@@ -1,9 +1,11 @@
 <?php
+session_start();
 
 // Twig
 require_once '../lib/vendor/autoload.php';
 $loader = new \Twig\Loader\FilesystemLoader("../src/vue");
 $twig = $twig = new \Twig\Environment($loader, []);
+$twig->addGlobal('session', $_SESSION);
 
 // Controleur et route
 require_once '../src/controleur/_controleurs.php';

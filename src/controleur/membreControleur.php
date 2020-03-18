@@ -61,6 +61,9 @@ function connectionControleur($twig, $db){
                 $form["valide"] = false;
                 $form["message"] = "Login ou mot de passe incorrect";
             }else{
+                $_SESSION["login"] = $email;
+                $_SESSION["prenom"] = $unUtilisateur['prenom'];
+                $_SESSION['role'] = $unUtilisateur['idRole'];
                 header("location: index.php");
             }
         }else{
@@ -70,6 +73,12 @@ function connectionControleur($twig, $db){
     }
 
     echo $twig->render("connection.html.twig", array("form" => $form));
+}
+
+function deconnexionControleur($twig, $db){
+    session_unset();
+    session_destroy();
+    header("location: index.php");
 }
 
 ?>
