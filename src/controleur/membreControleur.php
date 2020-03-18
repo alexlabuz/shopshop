@@ -18,7 +18,7 @@ function inscrireControleur($twig, $db){
             $form['valide'] = false;
             $form['message'] = "Les mots de passe sont différent";
         }else{
-            $utilisateur = new Utilsateur($db);
+            $utilisateur = new Utilisateur($db);
             $exec = $utilisateur->insert($email, password_hash($mdp, PASSWORD_DEFAULT), $nom, $prenom, $role);
 
             if(!$exec){
@@ -53,7 +53,7 @@ function connectionControleur($twig, $db){
         $form["email"] = $email;
 
 
-        $utilisateur = new Utilsateur($db);
+        $utilisateur = new Utilisateur($db);
         $unUtilisateur = $utilisateur->connect($email);
 
         if($unUtilisateur != null){

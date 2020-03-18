@@ -10,6 +10,8 @@ function getPage($db){
     $lesPages['liste'] = "listeControleur";
     $lesPages['maintenance'] = "maintenanceControleur";
     $lesPages['deconnexion'] = "deconnexionControleur";
+    $lesPages['utilisateur'] = "utilisateurControleur";
+    $lesPages['type'] = "typeControleur";
 
     if($db != null){
         if(isset($_GET["page"])){
