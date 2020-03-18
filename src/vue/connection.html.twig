@@ -5,13 +5,23 @@
 {% block contenu %}
 
 	{% if form.valide is defined %}
-		<h1>Vous êtes connecté(e)</h1>
-		<p>Bienvenue {{ form.email }} !</p>
 
-		{% if form.resteConnecte == true %}
-			<p>Vous restez connectez</p>
+		{% if form.valid == true %}
+			<h1>Vous êtes connecté(e)</h1>
+			<p>Bienvenue {{ form.email }} !</p>
+
+			{% if form.resteConnecte == true %}
+				<p>Vous restez connectez</p>
+			{% else %}
+				<p>Vous serais déconnecté(e) à la fermeture du navigateur</p>
+			{% endif %}
+
 		{% else %}
-			<p>Vous serais déconnecté(e) à la fermeture du navigateur</p>
+
+			<h1>Echec de connection</h1>
+			<p>{{ form.message }}</p>
+			<a href="index.php?page=connection">Retour à la page de connection</a>
+
 		{% endif %}
 
 	{% else %}

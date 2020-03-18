@@ -29,14 +29,19 @@
 	<div class="row col-12 justify-content-center">
 
 	<form class="needs-validation col-5" action="index.php?page=inscrire" method="post" enctype="application/x-www-form-urlencoded">
-		<div class="form-group">
-		  <label for="name">Name</label>
-		  <input type="text" class="form-control" id="name" name="name">
-		</div>
+		
 		<div class="form-group">
 		  <label for="email">Email address</label>
 		  <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
 		  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+		</div>
+		<div class="form-group">
+		  <label for="nom">Nom</label>
+		  <input type="text" class="form-control" id="nom" name="nom">
+		</div>
+		<div class="form-group">
+		  <label for="prenom">Prénom</label>
+		  <input type="text" class="form-control" id="prenom" name="prenom">
 		</div>
 		<div class="form-group">
 		  <label for="mdp">Password</label>
@@ -46,16 +51,16 @@
 		  <label for="mdp2">Vérifier mot de passe</label>
 		  <input type="password" class="form-control" id="mdp2" name="mdp2">
 		</div>
-		<div class="form-group form-check">
-		  <input type="checkbox" class="form-check-input" id="condition" name="condition">
-		  <label class="form-check-label" for="condition">Conditions d'utilsations</label>
-		</div>
 		<div class="form-group">
 			<label for="role">Selcetionner le role</label>
 			<select class="form-control" id="role" name="role">
 				<option value="1">Administrateur</option>
 				<option value="2">Client</option>
 			</select>
+		</div>
+		<div class="form-group form-check">
+		  <input type="checkbox" class="form-check-input" id="condition" name="condition">
+		  <label class="form-check-label" for="condition">Conditions d'utilsations</label>
 		</div>
 
 		<button type="submit" class="btn btn-primary" name="btInscrire">Submit</button>
