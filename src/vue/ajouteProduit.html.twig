@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste des articles{{ parent() }}{% endblock %}
+
+{% block contenu %}
+
+<div class="container">
+
+    <h1>Ajout de produit</h1>
+
+
+    <form method="post" action="index.php?page=ajoutProduit">
+        <div class="form-group">
+            <label for="designation">Désignation</label>
+            <input type="text" class="form-control" id="designation" name="designation" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="prix">Prix</label>
+            <input type="number" step="0.01" class="form-control" id="prix" name="prix"  required/>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Rayon</label>
+            <select class="form-control" id="type" name="type">
+                {% for i in listeType %}
+                    <option value="{{ i.id }}">{{ i.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" name="btValid" class="btn btn-primary">Valider</button>
+    </form>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste des articles{{ parent() }}{% endblock %}
+
+{% block contenu %}
+
+<div class="container">
+
+    <h1>Liste des produits</h1>
+    
+    <a class="btn btn-primary m-2" href="index.php?page=ajoutProduit" role="button">Ajouter un nouveau produit</a>
+    
+    <table class="table table-dark">
+    <thead>
+        <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Désignation</th>
+        <th scope="col">Description</th>
+        <th scope="col">Prix</th>
+        <th scope="col">Rayon</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for i in liste %}
+        <tr>
+        <th scope="row">{{ i.id }}</th>
+        <td>{{ i.designation }}</td>
+        <td>{{ i. description  }}</td>
+        <td style="width: 100px;">{{ i.prix }} $</td>
+        <td>{{ i.libelleType }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+</div>
+
+
+{% endblock %}
