@@ -18,6 +18,7 @@
         <th scope="col">Description</th>
         <th scope="col">Prix</th>
         <th scope="col">Rayon</th>
+        <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +29,7 @@
         <td>{{ i. description  }}</td>
         <td style="width: 100px;">{{ i.prix }} $</td>
         <td>{{ i.libelleType }}</td>
+        <td><a href="index.php?page=produitModif&id={{i.id}}" class="text-light">Modifier</a></td>
         </tr>
     {% endfor %}
     </tbody>

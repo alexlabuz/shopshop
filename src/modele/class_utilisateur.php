@@ -5,6 +5,9 @@ class Utilisateur{
     private $insert; // 1
     private $connect;
     private $select;
+    private $selectById;
+    private $update;
+    private $updateMdp;
 
     public function __construct($db){
         $this->db = $db;
@@ -15,10 +18,20 @@ class Utilisateur{
         $this->connect = $this->db->prepare("SELECT * FROM utilisateur WHERE email=:email");
 
         $this->select = $this->db->prepare(
-        "SELECT r.id, email, idRole, nom, prenom, r.libelle AS libellerole
+        "SELECT u.id AS id ,email, idRole, nom, prenom, r.libelle AS libellerole
         FROM utilisateur u, role r
         WHERE u.idRole = r.id
         ORDER BY nom");
+
+        $this->selectById = $this->db->prepare("SELECT * FROM utilisateur WHERE id = :id");
+
+        $this->update = $this->db->prepare("UPDATE utilisateur 
+        SET nom = :nom, prenom = :prenom, idRole = :role, email = :email
+        WHERE id=:id");
+
+        $this->updateMdp = $this->db->prepare("UPDATE utilisateur 
+        SET mdp = :mdp
+        WHERE id=:id");
     }
 
     // Fonction qui ajoute un utilsateur dans la base de données
@@ -53,6 +66,46 @@ class Utilisateur{
         }
 
         return $this->select->fetchAll();
+    }
+
+    public function selectById($id){
+        $this->selectById->execute(array(':id' => $id));
+
+        if($this->selectById->errorCode() != 0){
+            print_r($this->selectById->errorInfo());
+        }
+
+        return $this->selectById->fetch();
+    }
+
+    public function update($id, $role, $nom, $prenom, $email){
+        $r = true;
+        $this->update->execute(array(
+            ":id"=>$id,
+            ":role"=>$role,
+            ":nom"=>$nom,
+            ":prenom"=>$prenom,
+            ":email"=>$email
+        ));
+
+        if($this->update->errorCode() != 0){
+            print_r($this->update->errorInfo());
+            $r = false;
+        }
+
+        return $r;
+    }
+
+    public function updateMdp($id, $mdp){
+        $r = true;
+        $this->updateMdp->execute(array(":id" => $id, ":mdp" => $mdp));
+
+        if($this->updateMdp->errorCode() != 0){
+            print_r($this->updateMdp->errorInfo());
+            $r = false;
+        }
+
+        return $r;
     }
 
 }

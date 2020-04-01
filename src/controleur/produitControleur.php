@@ -35,12 +35,56 @@ function ajoutProduit($twig, $db){
     echo $twig->render("ajouteProduit.html.twig", array("form" => $form, "listeType" => $listeType));    
 }
 
-function listeControleur($twig){
+function listeControleur($twig, $db){
     echo $twig->render("liste_article.html.twig", array());
 }
 
-function produitControleur($twig){
+function produitControleur($twig, $db){
     echo $twig->render("apercu-produit.html.twig", array());
+}
+
+function produitModifControleur($twig, $db){
+    $form = array();
+    $produit = new Produit($db);
+
+    if(isset($_GET['id'])){
+        $unProduit = $produit->selectById($_GET['id']);
+        
+        if($unProduit != null){
+            $form["produit"] = $unProduit;
+            $type = new Type($db);
+            $liste = $type->select();
+            $form['types'] = $liste;
+        }else{
+            $form['valide'] = false;
+            $form["message"] = "Produit introuvable";
+        }
+
+    }else{
+
+        if(isset($_POST["btModifier"])){
+            $id = $_POST["id"];
+            $designation = $_POST["designation"];
+            $description = $_POST["description"];
+            $prix = $_POST["prix"];
+            $idType = $_POST["type"];
+
+            $exec = $produit->update($id, $designation, $description, $prix, $idType);
+            if(!$exec){
+                $form['valide'] = false;
+                $form['message'] = "Echec de la modification";
+            }else{
+                $form['valide'] = true;
+                $form['message'] = "Modification réussi";
+            }
+        }else{
+            $form['valide'] = false;
+            $form["message"] = "Pas de produit précisé";
+        }
+
+    }
+
+    echo $twig->render("produit-modif.html.twig", array("form" => $form));
 }
 
 ?>

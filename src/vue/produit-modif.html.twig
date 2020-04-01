@@ -1,0 +1,55 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier le produit{{ parent() }}{% endblock %}
+
+{% block contenu %}
+
+{% if form.produit is defined %}
+
+<h1>Modifier produit</h1>
+
+<form method="POST" action="index.php?page=produitModif" enctype="application/x-www-form-urlencoded">
+  <div class="form-group">
+    <label for="designation">Désignation</label>
+    <input type="text" class="form-control" id="designation" name="designation" value="{{form.produit.designation}}">
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="3">{{form.produit.description}}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="prix">Prix</label>
+    <input type="number" step="0.01" class="form-control" id="prix" name="prix" value="{{form.produit.prix}}">
+  </div>
+
+  <div class="form-group">
+    <label for="type">Rayon</label>
+    <select class="form-control" id="type" name="type">
+        {% for r in form.types %}
+            {% if r.id == form.produit.idType %}
+                <option value="{{r.id}}" selected>{{r.libelle}}</option>
+            {% else %}
+                <option value="{{r.id}}">{{r.libelle}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+  </div>
+
+  <input type="hidden" name="id" value="{{form.produit.id}}" />
+
+  <button type="submit" name="btModifier" class="btn btn-primary">Submit</button>
+</form>
+
+{% else %}
+    {% if form.valide == true %}
+        <h2 class="h3 mb-3 font-weight-normal">{{form.message}}</h2>
+    {% else %}
+        <h2 class="alert alert-danger" role="alert">{{ form.message }}</h2> 
+    {% endif %}
+    
+    <a href="index.php?page=produit-admin">Retourner sur la liste des produit</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier l'utilisateur{{ parent() }}{% endblock %}
+
+{% block contenu %}
+
+{% if form.utilisateur is defined %}
+
+<h1>Modifier l'utilisateur</h1>
+
+<form method="POST" action="index.php?page=utilisateurModif" enctype="application/x-www-form-urlencoded">
+  <div class="form-group">
+    <label for="mdp1">Changer le mot de passe</label>
+    <input type="password" class="form-control" id="mdp1" name="mdp1">
+  </div>
+
+  <div class="form-group">
+    <label for="mdp2">Confirmation</label>
+    <input type="password" class="form-control" id="mdp2" name="mdp2">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Adresse e-mail</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{form.utilisateur.email}}">
+  </div>
+
+  <div class="form-group">
+    <label for="nom">Nom</label>
+    <input type="text" class="form-control" id="nom" name="nom" value="{{form.utilisateur.nom}}">
+  </div>
+
+  <div class="form-group">
+    <label for="prenom">Prénom</label>
+    <input type="text" class="form-control" id="prenom" name="prenom" value="{{form.utilisateur.prenom}}">
+  </div>
+
+  <div class="form-group">
+    <label for="role">Role</label>
+    <select class="form-control" id="role" name="role">
+        {% for r in form.roles %}
+            {% if r.id == form.utilisateur.idRole %}
+                <option value="{{r.id}}" selected>{{r.libelle}}</option>
+            {% else %}
+                <option value="{{r.id}}">{{r.libelle}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+  </div>
+
+  <input type="hidden" name="id" value="{{form.utilisateur.id}}" />
+
+  <button type="submit" name="btModifier" class="btn btn-primary">Submit</button>
+</form>
+
+{% else %}
+    {% if form.valide == true %}
+        <h2 class="h3 mb-3 font-weight-normal">{{form.message}}</h2>
+    {% else %}
+        <h2 class="alert alert-danger" role="alert">{{ form.message }}</h2> 
+    {% endif %}
+    
+    <a href="index.php?page=utilisateur">Retourner sur la liste des utilisateur</a>
+{% endif %}
+
+{% endblock %}

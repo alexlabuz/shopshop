@@ -29,6 +29,7 @@
             <tr>
                 <th scope="col">Numero</th>
                 <th scope="col">Libelle</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,7 @@
                 <tr>
                     <td>{{ i.id }}</td>
                     <td>{{ i.libelle }}</td>
+                    <td><a href="index.php?page=typeModif&id={{ i.id }}">Modifier</td>
                 </tr>
             {% endfor %}
         </tbody>
