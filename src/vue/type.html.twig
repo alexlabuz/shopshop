@@ -11,7 +11,20 @@
     <p>{{ form.message }}</p>
     <a href="index.php?page=type">Retour à la liste de type</a>
 {% else %}  
+
 <h1>Liste des type de produit</h1>
+
+{% if form.etat is defined %}
+    {% if form.etat == true %}
+        <h2 class="text-success">Suppression réussi</h2>
+    {% else %}
+        <h2 class="text-danger">Erreur dans la suppression</h2>
+    {% endif %}
+{% endif %}
+
+{% if form.message %}
+    <h2 class="text-danger">{{form.message}}</h2>
+{% endif %}
 
 <form method="post" action="index.php?page=type">
     <div class="form-group">
@@ -23,12 +36,14 @@
 </form>
 <br>
 
+<form method="POST" action="index.php?page=type" enctype="application/x-www-form-urlencoded">
 <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">Numero</th>
                 <th scope="col">Libelle</th>
+                <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -37,12 +52,15 @@
                 <tr>
                     <td>{{ i.id }}</td>
                     <td>{{ i.libelle }}</td>
-                    <td><a href="index.php?page=typeModif&id={{ i.id }}">Modifier</td>
+                    <td><a href="index.php?page=typeModif&id={{ i.id }}">Modifier</a></td>
+                    <td><input type="checkbox" name="cocher[]" id="cocher[]" value="{{i.id}}"/></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+<button type="submit" name="btSupprimer" class="btn btn-danger float-right">Supprimer</button>
+</form>
 
 </div>
 {% endif %}

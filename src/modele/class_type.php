@@ -6,6 +6,7 @@ class Type{
     private $insert;
     private $selectById;
     private $update;
+    private $delete;
 
     public function __construct($db){
         $this->db = $db;
@@ -17,6 +18,8 @@ class Type{
         $this->selectById = $this->db->prepare("SELECT * FROM type WHERE id = :id");
 
         $this->update = $this->db->prepare("UPDATE type SET libelle = :libelle WHERE id = :id");
+
+        $this->delete = $this->db->prepare("DELETE FROM type WHERE id = :id");
     }
 
     // Récupére tout les type de la base de données
@@ -59,6 +62,18 @@ class Type{
 
         if($this->update->errorCode() != 0){
             print_r($this->update->errorInfo());
+            $r = false;
+        }
+
+        return $r;
+    }
+    
+    public function delete($id){
+        $r = true;
+        $this->delete->execute(array(":id" => $id));
+
+        if($this->delete->errorCode() != 0){
+            print_r($this->delete->errorInfo());
             $r = false;
         }
 

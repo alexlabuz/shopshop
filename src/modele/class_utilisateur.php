@@ -8,6 +8,7 @@ class Utilisateur{
     private $selectById;
     private $update;
     private $updateMdp;
+    private $delete;
 
     public function __construct($db){
         $this->db = $db;
@@ -32,6 +33,8 @@ class Utilisateur{
         $this->updateMdp = $this->db->prepare("UPDATE utilisateur 
         SET mdp = :mdp
         WHERE id=:id");
+
+        $this->delete = $db->prepare("DELETE FROM utilisateur WHERE id = :id");
     }
 
     // Fonction qui ajoute un utilsateur dans la base de données
@@ -102,6 +105,18 @@ class Utilisateur{
 
         if($this->updateMdp->errorCode() != 0){
             print_r($this->updateMdp->errorInfo());
+            $r = false;
+        }
+
+        return $r;
+    }
+
+    public function delete($id){
+        $r = true;
+
+        $this->delete->execute(array(":id" => $id));
+        if($this->delete->errorCode()!=0){
+            print_r($this->delete->errorInfo());
             $r = false;
         }
 

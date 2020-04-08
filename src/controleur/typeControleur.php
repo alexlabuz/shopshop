@@ -3,7 +3,6 @@
 function typeControleur($twig, $db){
     $form = array();
     $types = new Type($db);
-    $liste = $types->select();
     $form["valide"] = true;
 
     if(isset($_POST['btType'])){
@@ -23,6 +22,41 @@ function typeControleur($twig, $db){
         }
     }
 
+    if(isset($_POST['btSupprimer'])){
+        $cocher = $_POST['cocher'];
+        $form["valide"] = true;
+        $etat = true;
+
+        // On vérifie si des article existe sous ce type
+        $produit = new Produit($db);
+        $existeArticle = false;
+        foreach($cocher as $idType){
+            $liste = $produit->selectByType($idType);
+            if($liste != null){
+                $existeArticle = true;
+                $form["message"] = "Des articles existe déjà dans ce(s) rayon(s), suppression impossible";
+            }
+        }
+
+        if(!$existeArticle){
+            foreach($cocher as $id){
+                $exec = $types->delete($id);
+                if(!$exec){
+                    $etat = false;
+                }
+            }
+
+            header("Location:index.php?page=type&etat=". $etat);
+            exit;
+        }
+
+    }
+
+    if(isset($_GET["etat"])){
+        $form['etat'] = $_GET['etat'];
+    }
+
+    $liste = $types->select();
     echo $twig->render("type.html.twig", array("form" => $form, "liste" => $liste));    
 }
 

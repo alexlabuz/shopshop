@@ -1,11 +1,30 @@
 <?php
 
 function listeProduitControleur($twig, $db){
+    $form = array();
+    $produit = new Produit($db);
+    $liste = $produit->select();
 
-    $type = new Produit($db);
-    $liste = $type->select();
+    if(isset($_POST["btSupprimer"])){
+        $cocher = $_POST["cocher"];
+        $form['valide'] = true;
+        $etat = true;
 
-    echo $twig->render("produit-admin.html.twig", array("liste" => $liste));
+        foreach($cocher as $id){
+            $exec = $produit->delete($id);
+            if(!$exec){
+                $etat = false;
+            }
+        }
+        header("Location:index.php?page=produit-admin&etat=". $etat);
+        exit;
+    }
+
+    if(isset($_GET['etat'])){
+        $form["etat"] = $_GET["etat"];
+    }
+
+    echo $twig->render("produit-admin.html.twig", array("form" => $form,"liste" => $liste));
 }
 
 function ajoutProduit($twig, $db){

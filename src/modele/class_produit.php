@@ -6,6 +6,8 @@ class Produit{
     private $insert;
     private $selectById;
     private $update;
+    private $delete;
+    private $selectByType;
 
     public function __construct($db){
         $this->db = $db;
@@ -22,6 +24,10 @@ class Produit{
         $this->update = $this->db->prepare("UPDATE produit
         SET designation = :designation, description = :description, prix = :prix, idType = :idType 
         WHERE id = :id");
+
+        $this->delete = $this->db->prepare("DELETE FROM produit WHERE id = :id");
+
+        $this->selectByType = $this->db->prepare("SELECT * FROM produit WHERE idType = :idType");
     }
 
     public function select()
@@ -73,6 +79,29 @@ class Produit{
         }
 
         return $r;
+    }
+
+    public function delete($id){
+        $r = true;
+        $this->delete->execute(array(":id"=>$id));
+
+        if($this->delete->errorCode() != 0){
+            print_r($this->delete->errorInfo());
+            $r = false;
+        }
+
+        return $r;
+    }
+
+    public function selectByType($idType){
+        $this->selectByType->execute(array(":idType" => $idType));
+
+        if($this->selectByType->errorCode() != 0){
+            print_r($this->selectByType->errorInfo());
+        }
+    
+
+        return $this->selectByType->fetch();
     }
 
 }

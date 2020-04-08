@@ -7,8 +7,19 @@
 <div class="container">
 
     <h1>Liste des produits</h1>
+
+    {% if form.etat is defined %}
+        {% if form.etat == true %}
+            <h2 class="text-success">Suppression réussi</h2>
+        {% else %}
+            <h2 class="text-danger">Erreur dans la suppression</h2>
+        {% endif %}
+    {% endif %}
+    
     
     <a class="btn btn-primary m-2" href="index.php?page=ajoutProduit" role="button">Ajouter un nouveau produit</a>
+    
+    <form method="POST" action="index.php?page=produit-admin" enctype="application/x-www-form-urlencoded">
     
     <table class="table table-dark">
     <thead>
@@ -18,6 +29,7 @@
         <th scope="col">Description</th>
         <th scope="col">Prix</th>
         <th scope="col">Rayon</th>
+        <th scope="col"></th>
         <th scope="col"></th>
         </tr>
     </thead>
@@ -30,11 +42,14 @@
         <td style="width: 100px;">{{ i.prix }} $</td>
         <td>{{ i.libelleType }}</td>
         <td><a href="index.php?page=produitModif&id={{i.id}}" class="text-light">Modifier</a></td>
+        <td><input type="checkbox" name="cocher[]" id="cocher[]" value="{{i.id}}" /></td>
         </tr>
     {% endfor %}
     </tbody>
     </table>
+    <button type="submit" name="btSupprimer" class="btn btn-danger float-right">Supprimer</button>
 
+    </form>
 </div>
 
 
