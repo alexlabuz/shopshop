@@ -36,13 +36,16 @@ function ajoutProduit($twig, $db){
     $form['valid'] = true;
 
     if(isset($_POST['btValid'])){
+        $photo = null;
         $designation = $_POST["designation"];
         $description = $_POST["description"];
         $prix = $_POST["prix"];
         $type = $_POST["type"];
 
-        $exec = $produit->insert($designation, $description, $prix, $type);
+        $upload = new Upload(array("png", "gif", "jpg", "jpeg"), "images", 2000000);
+        $photo = $upload->enregistrer("photo");
 
+        $exec = $produit->insert($designation, $description, $prix, $type, $photo["chemin"]);
 
         if(!$exec){
             $form['valid'] = false;
@@ -59,16 +62,31 @@ function listeControleur($twig, $db){
 }
 
 function produitControleur($twig, $db){
-    echo $twig->render("apercu-produit.html.twig", array());
+    $form = array();
+
+    if(isset($_GET["id"])){
+        $produit = new Produit($db);
+        $unProduit = $produit->selectById($_GET["id"]);
+
+        if($unProduit != null){
+            $form["produit"] = $unProduit;
+            $type = new Type($db);
+        }else{
+            $form['valide'] = false;
+            $form["message"] = "Produit introuvable";
+        }
+    }
+
+    echo $twig->render("apercu-produit.html.twig", array("form" => $form));
 }
 
 function produitModifControleur($twig, $db){
     $form = array();
     $produit = new Produit($db);
 
-    if(isset($_GET['id'])){
-        $unProduit = $produit->selectById($_GET['id']);
-        
+    if(isset($_GET['id'])){    
+    $unProduit = $produit->selectById($_GET['id']);
+
         if($unProduit != null){
             $form["produit"] = $unProduit;
             $type = new Type($db);
@@ -82,14 +100,30 @@ function produitModifControleur($twig, $db){
     }else{
 
         if(isset($_POST["btModifier"])){
+            $photo = null;
             $id = $_POST["id"];
             $designation = $_POST["designation"];
             $description = $_POST["description"];
             $prix = $_POST["prix"];
             $idType = $_POST["type"];
 
-            $exec = $produit->update($id, $designation, $description, $prix, $idType);
+            $upload = new Upload(array("png", "gif", "jpg", "jpeg"), "images", 2000000);
+            $photo = $upload->enregistrer("photo");
+
+            $exec = $produit->update($id, $designation, $description, $prix, $photo["chemin"] ,$idType);
             if(!$exec){
+                $form['valide'] = false;
+                $form['message'] = "Echec de la modification";
+            }else{
+                $form['valide'] = true;
+                $form['message'] = "Modification réussi";
+            }
+        }elseif(isset($_POST["btEffaceImage"])){
+            $id = $_POST["id"];
+            $unProduit = $produit->selectById($id);
+
+            unlink($unProduit["photo"]);
+            $exec = $produit->update($id, $unProduit["designation"], $unProduit["description"], $unProduit["prix"], null ,$unProduit["idType"]);if(!$exec){
                 $form['valide'] = false;
                 $form['message'] = "Echec de la modification";
             }else{

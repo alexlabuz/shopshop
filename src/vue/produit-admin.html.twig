@@ -43,6 +43,7 @@
         <td>{{ i.libelleType }}</td>
         <td><a href="index.php?page=produitModif&id={{i.id}}" class="text-light">Modifier</a></td>
         <td><input type="checkbox" name="cocher[]" id="cocher[]" value="{{i.id}}" /></td>
+        <td><a href="?page=produit&id={{i.id}}" class="text-light">Afficher</a></td>
         </tr>
     {% endfor %}
     </tbody>

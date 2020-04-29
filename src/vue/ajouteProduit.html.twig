@@ -9,7 +9,7 @@
     <h1>Ajout de produit</h1>
 
 
-    <form method="post" action="index.php?page=ajoutProduit">
+    <form method="post" action="index.php?page=ajoutProduit" enctype="multipart/form-data">
         <div class="form-group">
             <label for="designation">Désignation</label>
             <input type="text" class="form-control" id="designation" name="designation" required>
@@ -31,10 +31,14 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <label for="photo">Photo</label>
+            <input type="file" name="photo" class="form-control-file" id="photo">
+        </div>
+
         <button type="submit" name="btValid" class="btn btn-primary">Valider</button>
     </form>
 
 </div>
-
 
 {% endblock %}

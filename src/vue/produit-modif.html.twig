@@ -8,7 +8,7 @@
 
 <h1>Modifier produit</h1>
 
-<form method="POST" action="index.php?page=produitModif" enctype="application/x-www-form-urlencoded">
+<form method="POST" action="index.php?page=produitModif" enctype="multipart/form-data">
   <div class="form-group">
     <label for="designation">Désignation</label>
     <input type="text" class="form-control" id="designation" name="designation" value="{{form.produit.designation}}">
@@ -36,6 +36,23 @@
         {% endfor %}
     </select>
   </div>
+
+  <div class="row">
+    <div class="col-2">
+    {% if form.produit.photo is not empty %}
+        <p class="imgcenter"><img src="{{form.produit.photo}}" width="120px" alt="image du poduit" /></p>
+    {% else %}
+        <p class="imgcenter"><img src="images/default.jpg" width="120px" alt="image du poduit" /></p>
+    {% endif %}
+    </div>
+    <div class="form-group col-3 align-self-center">
+        <label for="photo">Photo</label>
+        <input type="file" name="photo" class="form-control-file" id="photo">
+    </div>
+    <div class="form-group col-2 align-self-center">
+        <button type="submit" name="btEffaceImage" class="btn btn-danger">Supprimer la photo</button>
+    </div>
+    </div>
 
   <input type="hidden" name="id" value="{{form.produit.id}}" />
 

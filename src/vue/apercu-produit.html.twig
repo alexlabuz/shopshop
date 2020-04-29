@@ -3,20 +3,26 @@
 {% block title %}Page produit{{ parent() }}{% endblock %}
 
 {% block contenu %}
-  <h1 class="text-primary text-center">Page produit</h1>
-
-  <div class="container-xl">
+<h1 class="text-primary text-center mt-3">Page produit</h1>
+<div class="container">
     <div class="row">
-      <img src="images/image.jpg" class="img-fluid" alt="Responsive image">
-
-            
-      <div class="card border-secondary mb-3" style="max-width: 18rem;">
-        <div class="card-header">Header</div>
-        <div class="card-body text-secondary">
-          <h5 class="card-title">Secondary card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="col-2">
+        {% if form.produit.photo is not empty %}
+            <img src="{{form.produit.photo}}" alt="image du produit" class="img-thumbnail">
+        {% else %}
+            <img src="images/default.jpg" alt="image du produit" class="img-thumbnail">
+        {% endif %}
+        
         </div>
-      </div>
-  </div>  
-
+        <div class="col-4">
+            <h1>{{form.produit.designation}}</h1>
+            <p>{{form.produit.description}}</p>
+            <p>{{form.produit.prix}} $</p>
+        </div>
+        <div class="col-2 align-self-center">
+            <button class="btn btn-primary">Ajouter au panier</button>
+            <small>TVA 30%</small>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -13,16 +13,16 @@ class Produit{
         $this->db = $db;
         
         $this->select = $this->db->prepare(
-        "SELECT p.id AS id, designation, description, prix, idType, t.libelle AS libelleType 
+        "SELECT p.id AS id, designation, description, prix, idType, t.libelle AS libelleType, photo
         FROM produit p, type t WHERE p.idType = t.id ORDER BY p.designation");
 
-        $this->insert = $this->db->prepare("INSERT INTO produit(designation, description, prix, idType) 
-        VALUES (:designation ,:description ,:prix ,:idType)");
+        $this->insert = $this->db->prepare("INSERT INTO produit(designation, description, prix, idType, photo) 
+        VALUES (:designation ,:description ,:prix ,:idType, :photo)");
 
         $this->selectById = $this->db->prepare("SELECT * FROM produit WHERE id = :id");
 
         $this->update = $this->db->prepare("UPDATE produit
-        SET designation = :designation, description = :description, prix = :prix, idType = :idType 
+        SET designation = :designation, description = :description, prix = :prix, idType = :idType, photo = :photo
         WHERE id = :id");
 
         $this->delete = $this->db->prepare("DELETE FROM produit WHERE id = :id");
@@ -40,9 +40,15 @@ class Produit{
         return $this->select->fetchAll();
     }
 
-    public function insert($designation ,$description ,$prix ,$idType){
+    public function insert($designation ,$description ,$prix ,$idType, $photo){
         $r = true;
-         $this->insert->execute(array(':designation' => $designation, ':description' => $description ,':prix' => $prix ,':idType' => $idType));
+         $this->insert->execute(array(
+        ':designation' => $designation,
+         ':description' => $description ,
+         ':prix' => $prix ,
+         ':idType' => $idType,
+         ':photo' => $photo
+        ));
          
         if($this->insert->errorCode() != 0){
             print_r($this->insert->errorInfo());
@@ -63,13 +69,14 @@ class Produit{
         return $this->selectById->fetch();
     }
 
-    public function update($id, $designation, $description, $prix, $idType){
+    public function update($id, $designation, $description, $prix, $photo, $idType){
         $r = true;
         $this->update->execute(array(
             ":designation" => $designation,
             ":description" => $description,
             ":prix" => $prix,
             ":idType" => $idType,
+            ":photo" => $photo,
             ":id" => $id
         ));
 
