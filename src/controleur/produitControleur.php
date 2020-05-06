@@ -3,7 +3,21 @@
 function listeProduitControleur($twig, $db){
     $form = array();
     $produit = new Produit($db);
-    $liste = $produit->select();
+    
+    $limite = 3;
+    if(!isset($_GET['nopage'])){
+        $nopage = 0;
+        $inf = 0;
+    }else{
+        $nopage = $_GET["nopage"];
+        $inf = $nopage * $limite;
+    }
+    $r = $produit->selectCount();
+    $nb = $r['nb'];
+
+    $liste = $produit->selectLimit($inf, $limite);
+    $form["nbpages"] = ceil($nb/$limite);
+    $form["nopage"] = $nopage;
 
     if(isset($_POST["btSupprimer"])){
         $cocher = $_POST["cocher"];

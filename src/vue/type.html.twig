@@ -62,6 +62,26 @@
 <button type="submit" name="btSupprimer" class="btn btn-danger float-right">Supprimer</button>
 </form>
 
+<nav class="float-center">
+    <ul class="pagination justify-content-center m-4 p-4">
+        <li class="page-item {% if form.numeroPage == 0 %}disabled{% endif %}">
+            <a class="page-link" href="?page=type&nopage=0" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        {% for n in 1..form.nombrePage %}
+            <li class="page-item {% if form.numeroPage == n - 1 %}active{% endif %}"><a class="page-link" href="?page=type&nopage={{ n-1 }}">{{ n }}</a></li>
+        {% endfor %}
+
+        <li class="page-item {% if form.numeroPage == form.nombrePage - 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page=type&nopage={{form.nombrePage -1}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+  </ul>
+</nav>
+
 </div>
 {% endif %}
 

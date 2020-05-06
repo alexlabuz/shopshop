@@ -8,6 +8,8 @@ class Produit{
     private $update;
     private $delete;
     private $selectByType;
+    private $selectLimit;
+    private $selectCount;
 
     public function __construct($db){
         $this->db = $db;
@@ -28,6 +30,12 @@ class Produit{
         $this->delete = $this->db->prepare("DELETE FROM produit WHERE id = :id");
 
         $this->selectByType = $this->db->prepare("SELECT * FROM produit WHERE idType = :idType");
+
+        $this->selectLimit = $db->prepare(
+            "SELECT id, designation, description, prix, idType
+            FROM produit ORDER BY designation LIMIT :inf, :limite");
+
+        $this->selectCount = $db->prepare("SELECT COUNT(*) AS nb FROM produit");
     }
 
     public function select()
@@ -109,6 +117,28 @@ class Produit{
     
 
         return $this->selectByType->fetch();
+    }
+
+    public function selectLimit($inf, $limite){
+        $this->selectLimit->bindParam(":inf", $inf , PDO::PARAM_INT);
+        $this->selectLimit->bindParam(":limite", $limite , PDO::PARAM_INT);
+        $this->selectLimit->execute();
+
+        if($this->selectLimit->errorCode() != 0){
+            print_r($this->selectLimit->errorInfo());
+        }
+
+        return $this->selectLimit->fetchAll();
+    }
+
+    public function selectCount(){
+        $this->selectCount->execute();
+
+        if($this->selectCount->errorCode() != 0){
+            print_r($this->selectCount->errorInfo());
+        }
+
+        return $this->selectCount->fetch();
     }
 
 }

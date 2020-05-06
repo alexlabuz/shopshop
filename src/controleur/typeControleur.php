@@ -56,7 +56,21 @@ function typeControleur($twig, $db){
         $form['etat'] = $_GET['etat'];
     }
 
-    $liste = $types->select();
+    $limite = 3;
+    if(!isset($_GET["nopage"]) || empty($_GET["nopage"])){
+        $nopage = 0;
+        $inf = 0;
+    }else{
+        $nopage = $_GET["nopage"];
+        $inf = $limite * $nopage;
+    }
+
+    $r = $types->selectCount();
+    $nbArticle = $r["nb"];
+
+    $liste = $types->selectLimit($inf, $limite);
+    $form["nombrePage"] = ceil($nbArticle / $limite);
+    $form["numeroPage"] = $nopage;
     echo $twig->render("type.html.twig", array("form" => $form, "liste" => $liste));    
 }
 

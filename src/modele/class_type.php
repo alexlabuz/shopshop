@@ -7,6 +7,8 @@ class Type{
     private $selectById;
     private $update;
     private $delete;
+    private $selectLimit;
+    private $selectCount;
 
     public function __construct($db){
         $this->db = $db;
@@ -20,6 +22,10 @@ class Type{
         $this->update = $this->db->prepare("UPDATE type SET libelle = :libelle WHERE id = :id");
 
         $this->delete = $this->db->prepare("DELETE FROM type WHERE id = :id");
+
+        $this->selectLimit = $this->db->prepare("SELECT * FROM type ORDER BY libelle LIMIT :inf, :limite");
+
+        $this->selectCount = $this->db->prepare("SELECT COUNT(*) AS nb FROM type");
     }
 
     // Récupére tout les type de la base de données
@@ -78,6 +84,28 @@ class Type{
         }
 
         return $r;
+    }
+
+    public function selectLimit($inf, $limite){
+        $this->selectLimit->bindParam(":inf", $inf, PDO::PARAM_INT);
+        $this->selectLimit->bindParam(":limite", $limite, PDO::PARAM_INT);
+        $this->selectLimit->execute();
+
+        if($this->selectLimit->errorCode() != 0){
+            print_r($this->selectLimit->errorInfo());
+        }
+
+        return $this->selectLimit->fetchAll();
+    }
+
+    public function selectCount(){
+        $this->selectCount->execute();
+
+        if($this->selectCount->errorCode() != 0){
+            print_r($this->selectCount->errorInfo());
+        }
+
+        return $this->selectCount->fetch();
     }
 
 }
