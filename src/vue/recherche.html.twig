@@ -1,0 +1,41 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Recherche{{ parent() }}{% endblock %}
+
+{% block contenu %}
+<h1>Résultat de recherche</h1>
+
+{% if recherche is not null %}
+
+<div class="container">
+    <ul class="list-group">
+        {% for r in recherche %}
+            <a href="index.php?page=produit&id={{r.id}}"><li class="list-group-item">{{r.designation}}</li></a>
+        {% endfor %}
+    </ul>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item{% if form.nopage == 0 %} disabled{% endif %}">
+                <a class="page-link" href="?page=recherche&recherche={{form.saisie}}&nopage={{form.nopage-1}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for i in 1..form.nbpage  %}
+                <li class="page-item{% if (i-1) == form.nopage %} active{% endif %}"><a class="page-link" href="?page=recherche&recherche={{form.saisie}}&nopage={{(i-1)}}">{{i}}</a></li>
+            {% endfor %}
+            <li class="page-item{% if form.nopage == (form.nbpage-1) %} disabled{% endif %}">
+                <a class="page-link" href="?page=recherche&recherche={{form.saisie}}&nopage={{form.nopage+1}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+{% else %}
+<div class="alert alert-danger" role="alert">
+    Aucune recherche
+</div>
+{% endif %}
+{% endblock %}

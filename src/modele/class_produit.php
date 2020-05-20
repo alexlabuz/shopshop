@@ -10,6 +10,8 @@ class Produit{
     private $selectByType;
     private $selectLimit;
     private $selectCount;
+    private $recherche;
+    private $rechercheCount;
 
     public function __construct($db){
         $this->db = $db;
@@ -36,10 +38,24 @@ class Produit{
             FROM produit ORDER BY designation LIMIT :inf, :limite");
 
         $this->selectCount = $db->prepare("SELECT COUNT(*) AS nb FROM produit");
+
+        $this->recherche = $db->prepare(
+            "SELECT p.id AS id, designation, description, prix, photo, t.libelle AS type
+            FROM produit p, type t
+            WHERE p.idType = t.id
+            AND (LOWER(p.designation) LIKE LOWER(:recherche)
+            OR LOWER(p.description) LIKE LOWER(:recherche))
+            ORDER BY designation
+            LIMIT :inf, :limite");
+
+        $this->rechercheCount = $db->prepare(
+            "SELECT count(*) AS nb
+            FROM produit
+            WHERE (designation LIKE :recherche
+            OR description LIKE :recherche)");
     }
 
-    public function select()
-    {
+    public function select(){
         $liste = $this->select->execute();
         if($this->select->errorCode() != 0){
             print_r($this->select->errorInfo());
@@ -141,4 +157,27 @@ class Produit{
         return $this->selectCount->fetch();
     }
 
+    public function recherche($recherche, $inf, $limite){
+        $this->recherche->bindParam(":inf", $inf, PDO::PARAM_INT);
+        $this->recherche->bindParam(":limite", $limite, PDO::PARAM_INT);
+        $this->recherche->bindValue(":recherche", "%".$recherche."%", PDO::PARAM_STR);
+        
+        $this->recherche->execute();
+
+        if($this->recherche->errorCode()!=0){
+            print_r($this->recherche->errorInfo());
+        }
+
+        return $this->recherche->fetchAll();
+    }
+
+    public function rechercheCount($recherche){
+        $this->rechercheCount->execute(array("recherche"=>"%".$recherche."%"));
+
+        if($this->rechercheCount->errorCode()!=0){
+            print_r($this->rechercheCount->errorInfo());
+        }
+
+        return $this->rechercheCount->fetch();
+    }
 }

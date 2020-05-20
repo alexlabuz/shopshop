@@ -17,6 +17,7 @@ function getPage($db){
     $lesPages['ajoutProduit'] = "ajoutProduit";
     $lesPages['utilisateurModif'] = "utilisateurModifControleur";
     $lesPages['produitModif'] = "produitModifControleur";
+    $lesPages['recherche'] = "rechercheControleur";
 
     if($db != null){
         if(isset($_GET["page"])){
