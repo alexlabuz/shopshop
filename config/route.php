@@ -18,6 +18,7 @@ function getPage($db){
     $lesPages['utilisateurModif'] = "utilisateurModifControleur;1";
     $lesPages['produitModif'] = "produitModifControleur;1";
     $lesPages['recherche'] = "rechercheControleur;0";
+    $lesPages['validation'] = "validationControleur;0";
 
     if($db != null){
         // Vérifie si page existe dans GET

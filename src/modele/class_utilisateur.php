@@ -9,12 +9,13 @@ class Utilisateur{
     private $update;
     private $updateMdp;
     private $delete;
+    private $updateValider;
 
     public function __construct($db){
         $this->db = $db;
 
-        $this->insert = $this->db->prepare("INSERT INTO utilisateur(email, mdp, nom, prenom, idRole)
-        VALUES(:email, :mdp, :nom, :prenom, :roleUtilisateur)"); // 2
+        $this->insert = $this->db->prepare("INSERT INTO utilisateur(email, mdp, nom, prenom, idRole, idgenere)
+        VALUES(:email, :mdp, :nom, :prenom, :roleUtilisateur, :idgenere)"); // 2
 
         $this->connect = $this->db->prepare("SELECT * FROM utilisateur WHERE email=:email");
 
@@ -26,21 +27,32 @@ class Utilisateur{
 
         $this->selectById = $this->db->prepare("SELECT * FROM utilisateur WHERE id = :id");
 
-        $this->update = $this->db->prepare("UPDATE utilisateur 
+        $this->update = $this->db->prepare(
+        "UPDATE utilisateur 
         SET nom = :nom, prenom = :prenom, idRole = :role, email = :email
         WHERE id=:id");
 
-        $this->updateMdp = $this->db->prepare("UPDATE utilisateur 
+        $this->updateMdp = $this->db->prepare(
+        "UPDATE utilisateur 
         SET mdp = :mdp
         WHERE id=:id");
 
-        $this->delete = $db->prepare("DELETE FROM utilisateur WHERE id = :id");
+        $this->delete = $this->db->prepare("DELETE FROM utilisateur WHERE id = :id");
+
+        $this->updateValider = $this->db->prepare("UPDATE utilisateur SET valider = :valider WHERE email = :email");
     }
 
     // Fonction qui ajoute un utilsateur dans la base de données
-    public function insert($email, $mdp, $nom, $prenom, $role){
+    public function insert($email, $mdp, $nom, $prenom, $role, $idgenere){
         $r = true;
-        $this->insert->execute(array(':email' => $email, ':mdp' => $mdp, ':nom' => $nom, ':prenom' => $prenom, ':roleUtilisateur' => $role));
+        $this->insert->execute(array(
+            ':email' => $email,
+            ':mdp' => $mdp,
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':roleUtilisateur' => $role,
+            ':idgenere' => $idgenere
+        ));
         
         if($this->insert->errorCode() != 0){
             print_r($this->insert->errorInfo());
@@ -115,8 +127,22 @@ class Utilisateur{
         $r = true;
 
         $this->delete->execute(array(":id" => $id));
+
         if($this->delete->errorCode()!=0){
             print_r($this->delete->errorInfo());
+            $r = false;
+        }
+
+        return $r;
+    }
+
+    public function updateValider($email){
+        $r = true;
+
+        $this->updateValider->execute(array(":email" => $email, "valider" => 1));
+
+        if($this->updateValider->errorCode()!=0){
+            print_r($this->updateValider->errorInfo());
             $r = false;
         }
 

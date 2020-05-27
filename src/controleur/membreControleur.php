@@ -9,7 +9,8 @@ function inscrireControleur($twig, $db){
         $prenom = $_POST['prenom'];
         $mdp = $_POST['mdp'];
         $mdp2 = $_POST['mdp2'];
-        $role = $_POST['role'];
+        $role = 2;
+        $idgenere = uniqid();
 
         $form['valide'] = true;
         $form['name'] = $nom;
@@ -19,7 +20,7 @@ function inscrireControleur($twig, $db){
             $form['message'] = "Les mots de passe sont différent";
         }else{
             $utilisateur = new Utilisateur($db);
-            $exec = $utilisateur->insert($email, password_hash($mdp, PASSWORD_DEFAULT), $nom, $prenom, $role);
+            $exec = $utilisateur->insert($email, password_hash($mdp, PASSWORD_DEFAULT), $nom, $prenom, $role, $idgenere);
 
             if(!$exec){
                 $form['valide'] = false;
@@ -38,20 +39,14 @@ function inscrireControleur($twig, $db){
 function connectionControleur($twig, $db){
     $form = array();
 
-    if(isset($_POST["btConnecte"])){
+    echo $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
 
+    if(isset($_POST["btConnecte"])){
         $email = $_POST["email"];
         $mdp = $_POST["mdp"];
 
-        $resteConnecte = false;
-        if(isset($_POST["resteConnecte"])){
-            $resteConnecte = true;
-        }
-
         $form["valide"] = true;
-        $form["resteConnecte"] = $resteConnecte;
         $form["email"] = $email;
-
 
         $utilisateur = new Utilisateur($db);
         $unUtilisateur = $utilisateur->connect($email);
@@ -60,6 +55,30 @@ function connectionControleur($twig, $db){
             if(!password_verify($mdp, $unUtilisateur['mdp'])){
                 $form["valide"] = false;
                 $form["message"] = "Login ou mot de passe incorrect";
+            }elseif($unUtilisateur["valider"] == 0){
+                $form["valide"] = false;
+                $form["message"] = "Votre compte n'est pas activé, nous vous avons renvoyé une demande d'activation par mail";
+
+                $serveur = $_SERVER["HTTP_HOST"];
+                $script = $_SERVER["SCRIPT_NAME"];
+                $idgenere = $unUtilisateur["idgenere"];
+
+                $email = $unUtilisateur["email"];
+                $message = "
+                <html>
+                <head>
+                </head>
+                <body>
+                <h1>Bienvenue sur Shop-Shop</h1>
+                <p>
+                Pour confirmer votre inscription, veuillez cliquer sur le lien suivant :<br>
+                <a href=\"http://$serveur$script?page=validation&email=$email&idgenere=$idgenere\">Valider mon inscription</a>
+                </p>
+                </body>
+                </html>";
+                $headers[] = "MIME-Version: 1.0";
+                $headers[] = "Content-type: text/html; charset=utf-8";
+                mail($email, "Inscription sur SHOP-SHOP", $message, implode("\n", $headers));
             }else{
                 $_SESSION["login"] = $email;
                 $_SESSION["prenom"] = $unUtilisateur['prenom'];
@@ -134,6 +153,29 @@ function deconnexionControleur($twig, $db){
     session_unset();
     session_destroy();
     header("location: index.php");
+}
+
+function validationControleur($twig, $db){
+    $success = false;
+
+    $utilisateur = new Utilisateur($db);
+    $unUtilisateur = $utilisateur->connect($_GET["email"]);
+
+    if($unUtilisateur != null){
+        if($unUtilisateur["idgenere"] == $_GET["idgenere"]){
+            $exec = $utilisateur->updateValider($unUtilisateur["email"]);
+            if($exec){
+                $success = true;
+            }
+        }
+    }
+
+    if(!$success){
+        header("Location: index.php");
+        exit;
+    }
+
+    echo $twig->render("validation.html.twig", array());
 }
 
 ?>
